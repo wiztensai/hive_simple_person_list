@@ -5,10 +5,12 @@ import 'package:hive_simple_person_list/homepage.dart';
 import 'package:hive_simple_person_list/person_model.dart';
 
 Future<void> main() async {
+  // if await, so method 'ensureInitialized() has to exist
   WidgetsFlutterBinding.ensureInitialized();
+
   await Hive.initFlutter();
   Hive.registerAdapter(PersonModelAdapter());
-  await Hive.openBox(Constant.HIVE_DB_PERSON);
+  await Hive.openBox(Constant.HIVE_DB_PERSON); // must init
 
   runApp(const MyApp());
 }

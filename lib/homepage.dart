@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _FormInputState extends State<HomePage> {
-  var box;
+  late Box<dynamic> box;
   var data = [];
   TextEditingController nameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
@@ -26,7 +26,19 @@ class _FormInputState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Form Input')),
+      appBar: AppBar(title: const Text('Form Input'), actions: [
+        ElevatedButton.icon(
+            onPressed: () {
+              setState(() {
+                box.clear();
+                data = [];
+
+                print('Clear the database');
+              });
+            },
+            icon: const Icon(Icons.delete),
+            label: const Text('Clear all'))
+      ]),
       body: SingleChildScrollView(
           child: Column(
         children: [
@@ -54,13 +66,20 @@ class _FormInputState extends State<HomePage> {
                     onPressed: () {
                       var name = nameController.text;
                       var address = addressController.text;
+                      if (name.isEmpty || address.isEmpty) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text('Please fill the form'),
+                        ));
+                        return;
+                      }
 
                       data.add(PersonModel(name, address));
 
                       box.put(Constant.HIVE_TB_PERSON, data);
 
                       setState(() {
-                        // cuma utk mentriger rebuild
+                        // triger rebuild
                         var hehe =
                             box.get(Constant.HIVE_TB_PERSON)[0] as PersonModel;
                         print(hehe.name);
